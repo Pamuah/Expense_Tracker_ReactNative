@@ -7,8 +7,14 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
+import { useInput } from "../Context/InputContext";
 
 export default function HomeScreen({ navigation }) {
+  const isExpense = true; // Replace with dynamic value if needed
+  const { input } = useInput();
+  const { Gained } = useInput();
+  const { Income } = useInput();
+  const { Expense } = useInput();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.blueContainer}>
@@ -23,7 +29,6 @@ export default function HomeScreen({ navigation }) {
           justifyContent: "space-evenly",
           padding: 16,
           flexDirection: "row",
-          // flex: 1,
         }}
       >
         <View style={styles.incomeContainer}>
@@ -42,9 +47,27 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.incomeText}>GHS 7,000.00</Text>
         </View>
       </View>
-      <View style={{ padding: 16, flexDirection: "column", flex: 1 }}>
+
+      <View style={{ padding: 16, flexDirection: "column" }}>
         <Text style={styles.historyTxt}>History</Text>
+        <View style={styles.cardholder}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.descriptionText}>Groceries</Text>
+          </View>
+          <View style={styles.cardDetails}>
+            <Text
+              style={[
+                styles.amountText,
+                { color: isExpense ? "red" : "green" },
+              ]}
+            >
+              {isExpense ? "- " : "+ "}GHS 100.00
+            </Text>
+            <Text style={styles.dateText}>1st Dec</Text>
+          </View>
+        </View>
       </View>
+
       <View style={{ padding: 16 }}>
         <TouchableOpacity
           style={styles.addButton}
@@ -53,7 +76,6 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.addIconCont}>
             <Ionicons name="add" size={24} color="#0F52BA" />
           </View>
-
           <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
             Add Transaction
           </Text>
@@ -116,17 +138,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "white",
     width: "45%",
-    height: "130",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-  },
-
-  expenseContainer: {
-    padding: 16,
-    backgroundColor: "white",
-    width: "45%",
-    height: "130",
+    height: 130,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
@@ -158,31 +170,62 @@ const styles = StyleSheet.create({
 
   historyTxt: {
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 8, // Adjust for better spacing
     fontSize: 18,
     fontWeight: "bold",
+  },
+
+  cardholder: {
+    backgroundColor: "#fff",
+    padding: 16,
+    marginTop: 8, // Space between History and card
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+
+  cardHeader: {
+    marginBottom: 8,
+  },
+
+  descriptionText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#333",
+  },
+
+  cardDetails: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  amountText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  dateText: {
+    fontSize: 14,
+    color: "#666",
   },
 
   addButton: {
     padding: 16,
     backgroundColor: "#0F52BA",
     width: "100%",
-    height: "75",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
   },
-  historyTxt: {
-    marginTop: 20,
-    marginBottom: 20,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
 
   addIconCont: {
     marginBottom: 6,
-    height: "30",
-    width: "35",
+    height: 30,
+    width: 35,
     alignItems: "center",
     padding: 3,
     backgroundColor: "white",

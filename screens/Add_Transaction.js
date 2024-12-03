@@ -7,12 +7,24 @@ import {
   TextInput,
 } from "react-native";
 import { useState } from "react";
+import { useInput } from "../Context/InputContext";
+import RadioForm, {
+  RadioButton,
+  RadioButtonInput,
+  RadioButtonLabel,
+} from "react-native-simple-radio-button";
 
 const Add_Transaction = ({ navigation }) => {
-  const [Transaction, setTransaction] = useState("");
-  const [Expense, setExpense] = useState("");
-  const [Gained, setGained] = useState("");
-  const [Income, setIncome] = useState("");
+  const { input, setInput } = useInput();
+  const { Expense, setExpense } = useInput();
+  const { Gained, setGained } = useInput();
+  const { Income, setIncome } = useInput();
+  const [value, setValue] = useState(0);
+
+  var radio_props = [
+    { label: "Expense", value: 0 },
+    { label: "Income", value: 1 },
+  ];
   return (
     <View style={styles.container}>
       <Text style={styles.txtTransaction}>Transaction</Text>
@@ -20,11 +32,10 @@ const Add_Transaction = ({ navigation }) => {
         style={styles.input}
         placeholder="eg. groceries"
         placeholderTextColor="gray"
-        value={Transaction}
-        onChangeText={setTransaction}
+        value={input}
+        onChangeText={setInput}
       />
-
-      <Text style={styles.txtTransaction}>Amount Spent</Text>
+      <Text style={styles.txtTransaction}>Amount</Text>
       <TextInput
         style={styles.input}
         placeholder="eg. GHS100.00"
@@ -32,16 +43,16 @@ const Add_Transaction = ({ navigation }) => {
         value={Expense}
         onChangeText={setExpense}
       />
-
-      <Text style={styles.txtTransaction}>Amount Gained</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="eg. GHS30.00"
-        placeholderTextColor="gray"
-        value={Gained}
-        onChangeText={setGained}
+      <Text style={styles.txtTransaction}>Select Type of Transaction</Text>
+      <RadioForm
+        style={{ marginBottom: 16 }}
+        radio_props={radio_props}
+        initial={0}
+        //formHorizontal={true}
+        buttonWrapStyle={{ marginLeft: 10 }}
+        onPress={(value) => setValue(value)}
       />
-
+      console.log(value);
       <Text style={styles.txtTransaction}>Overall Income</Text>
       <TextInput
         style={styles.input}
@@ -50,7 +61,6 @@ const Add_Transaction = ({ navigation }) => {
         value={Income}
         onChangeText={setIncome}
       />
-
       <TouchableOpacity
         style={styles.updateButton}
         onPress={() => navigation.goBack("HomeScreen")}
