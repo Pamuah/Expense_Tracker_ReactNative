@@ -8,6 +8,7 @@ export const InputProvider = ({ children }) => {
   const [Expense, setExpense] = useState("");
   const [Income, setIncome] = useState("");
   const [Gained, setGained] = useState("");
+
   return (
     <InputContext.Provider
       value={{

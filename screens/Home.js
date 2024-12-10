@@ -6,15 +6,17 @@ import {
   Text,
   View,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { useInput } from "../Context/InputContext";
+import { useState, useContext } from "react";
+import { HistoryContext } from "../Context/HistoryContext";
 
 export default function HomeScreen({ navigation }) {
   const isExpense = true; // Replace with dynamic value if needed
-  const { input } = useInput();
-  const { Gained } = useInput();
-  const { Income } = useInput();
-  const { Expense } = useInput();
+
+  const { transactions } = useContext(HistoryContext);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.blueContainer}>
@@ -50,9 +52,22 @@ export default function HomeScreen({ navigation }) {
 
       <View style={{ padding: 16, flexDirection: "column" }}>
         <Text style={styles.historyTxt}>History</Text>
-        <View style={styles.cardholder}>
+        {/*the begining of the flatList*/}
+        <FlatList
+          data={transactions}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.cardContainer}>
+              <Text>Description: {item.description}</Text>
+
+              <Text>Amount: {item.amount}</Text>
+            </View>
+          )}
+        />
+        {/*the endof the flatList*/}
+        {/* <View style={styles.cardholder}>
           <View style={styles.cardHeader}>
-            <Text style={styles.descriptionText}>Groceries</Text>
+            <Text style={styles.descriptionText}>{input}</Text>
           </View>
           <View style={styles.cardDetails}>
             <Text
@@ -61,17 +76,20 @@ export default function HomeScreen({ navigation }) {
                 { color: isExpense ? "red" : "green" },
               ]}
             >
-              {isExpense ? "- " : "+ "}GHS 100.00
+              {isExpense ? "- " : "+ "}GHS {Expense}
             </Text>
             <Text style={styles.dateText}>1st Dec</Text>
           </View>
-        </View>
+        </View>*/}
       </View>
 
       <View style={{ padding: 16 }}>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate("Add_Transaction")}
+          onPress={() => {
+            navigation.navigate("Add_Transaction");
+            addTransaction();
+          }}
         >
           <View style={styles.addIconCont}>
             <Ionicons name="add" size={24} color="#0F52BA" />
@@ -230,5 +248,21 @@ const styles = StyleSheet.create({
     padding: 3,
     backgroundColor: "white",
     borderRadius: 10,
+  },
+
+  cardContainer: {
+    borderColor: "black",
+    padding: 12,
+    borderBottomWidth: 1,
+    backgroundColor: "yellow",
+    borderRadius: 10,
+    marginBottom: 12,
+    width: "100%",
+    height: 70,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    elevation: 3,
+    borderColor: "transparent",
   },
 });

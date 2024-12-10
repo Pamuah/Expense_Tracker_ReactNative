@@ -6,13 +6,14 @@ import {
   StyleSheet,
   TextInput,
 } from "react-native";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useInput } from "../Context/InputContext";
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
+import { HistoryContext } from "../Context/HistoryContext";
 
 const Add_Transaction = ({ navigation }) => {
   const { input, setInput } = useInput();
@@ -20,6 +21,7 @@ const Add_Transaction = ({ navigation }) => {
   const { Gained, setGained } = useInput();
   const { Income, setIncome } = useInput();
   const [value, setValue] = useState(0);
+  const { addTransaction } = useContext(HistoryContext);
 
   var radio_props = [
     { label: "Expense", value: 0 },
@@ -52,7 +54,7 @@ const Add_Transaction = ({ navigation }) => {
         buttonWrapStyle={{ marginLeft: 10 }}
         onPress={(value) => setValue(value)}
       />
-      console.log(value);
+
       <Text style={styles.txtTransaction}>Overall Income</Text>
       <TextInput
         style={styles.input}
@@ -63,7 +65,10 @@ const Add_Transaction = ({ navigation }) => {
       />
       <TouchableOpacity
         style={styles.updateButton}
-        onPress={() => navigation.goBack("HomeScreen")}
+        onPress={() => {
+          addTransaction();
+          navigation.goBack("HomeScreen");
+        }}
       >
         <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
           Update
