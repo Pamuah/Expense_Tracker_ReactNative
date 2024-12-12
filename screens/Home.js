@@ -15,7 +15,13 @@ import { HistoryContext } from "../Context/HistoryContext";
 export default function HomeScreen({ navigation }) {
   const isExpense = true; // Replace with dynamic value if needed
 
-  const { transactions } = useContext(HistoryContext);
+  const { transactions, radio_props, value } = useContext(HistoryContext);
+  const date = new Date();
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // Months are zero-indexed
+  const year = date.getFullYear();
+
+  const currentDate = `${day}-${month}-${year}`;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,37 +64,56 @@ export default function HomeScreen({ navigation }) {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.cardContainer}>
-              <Text>Description: {item.description}</Text>
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.headTxt}>{item.description}</Text>
 
-              <Text>Amount: {item.amount}</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 5,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "600",
+                      marginRight: 10,
+                      color: "gray",
+                    }}
+                  >
+                    GHS {item.amount}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 16, color: "gray", fontWeight: "600" }}
+                  >
+                    {currentDate}
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "column",
+                  height: "100%",
+                  width: "10",
+                  backgroundColor:
+                    radio_props[value].value === 0 ? "red" : "green",
+                }}
+              ></View>
             </View>
           )}
         />
-        {/*the endof the flatList*/}
-        {/* <View style={styles.cardholder}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.descriptionText}>{input}</Text>
-          </View>
-          <View style={styles.cardDetails}>
-            <Text
-              style={[
-                styles.amountText,
-                { color: isExpense ? "red" : "green" },
-              ]}
-            >
-              {isExpense ? "- " : "+ "}GHS {Expense}
-            </Text>
-            <Text style={styles.dateText}>1st Dec</Text>
-          </View>
-        </View>*/}
       </View>
 
-      <View style={{ padding: 16 }}>
+      <View
+        style={{ padding: 16, position: "absolute", bottom: 0, width: "100%" }}
+      >
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => {
             navigation.navigate("Add_Transaction");
-            addTransaction();
           }}
         >
           <View style={styles.addIconCont}>
@@ -254,15 +279,24 @@ const styles = StyleSheet.create({
     borderColor: "black",
     padding: 12,
     borderBottomWidth: 1,
-    backgroundColor: "yellow",
+    backgroundColor: "white",
     borderRadius: 10,
-    marginBottom: 12,
+    marginBottom: 15,
     width: "100%",
-    height: 70,
+    height: 75,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
     elevation: 3,
     borderColor: "transparent",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  headTxt: {
+    fontSize: 17,
+    fontWeight: "500",
+    color: "black",
+    marginBottom: 5,
   },
 });

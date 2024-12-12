@@ -18,15 +18,11 @@ import { HistoryContext } from "../Context/HistoryContext";
 const Add_Transaction = ({ navigation }) => {
   const { input, setInput } = useInput();
   const { Expense, setExpense } = useInput();
-  const { Gained, setGained } = useInput();
   const { Income, setIncome } = useInput();
-  const [value, setValue] = useState(0);
-  const { addTransaction } = useContext(HistoryContext);
 
-  var radio_props = [
-    { label: "Expense", value: 0 },
-    { label: "Income", value: 1 },
-  ];
+  const { addTransaction, radio_props, setValue, value } =
+    useContext(HistoryContext);
+
   return (
     <View style={styles.container}>
       <Text style={styles.txtTransaction}>Transaction</Text>
@@ -66,7 +62,10 @@ const Add_Transaction = ({ navigation }) => {
       <TouchableOpacity
         style={styles.updateButton}
         onPress={() => {
+          console.log(radio_props[value].label);
           addTransaction();
+          setInput(" ");
+          setExpense(" ");
           navigation.goBack("HomeScreen");
         }}
       >
