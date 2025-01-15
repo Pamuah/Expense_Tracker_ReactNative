@@ -11,10 +11,10 @@ import {
 import { useInput } from "../Context/InputContext";
 import { useState, useContext } from "react";
 import { HistoryContext } from "../Context/HistoryContext";
+// Only import react-native-gesture-handler on native platforms
+import "react-native-gesture-handler";
 
 export default function HomeScreen({ navigation }) {
-  const isExpense = true; // Replace with dynamic value if needed
-
   const { transactions, radio_props, value } = useContext(HistoryContext);
   const date = new Date();
   const day = date.getDate();
@@ -23,13 +23,43 @@ export default function HomeScreen({ navigation }) {
 
   const currentDate = `${day}-${month}-${year}`;
 
+  let array1 = [];
+  let array2 = [];
+
+  // Separate expenses and incomes
+  transactions.forEach((item) => {
+    const amount = parseFloat(item.amount); // Convert amount to a number
+    if (item.type === "expense") {
+      array1.push(amount);
+      console.log("Expense:", amount);
+    } else if (item.type === "income") {
+      array2.push(amount);
+      console.log("Income:", amount);
+    }
+  });
+
+  console.log("Expenses:", array1, "Incomes:", array2);
+
+  // Sum up the income values
+  function sum(acc, x) {
+    return acc + x;
+  }
+
+  const totalExpenses = array1.reduce(sum, 0);
+  const totalIncome = array2.reduce(sum, 0);
+  const Balance = totalIncome - totalExpenses;
+
+  console.log("Total Income:", totalIncome);
+  console.log("Total Expenses:", totalExpenses);
+  console.log("Balance:", Balance);
+  //console.log(transactions);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.blueContainer}>
         <Text style={styles.headerText}>Hello, User</Text>
         <Text style={styles.subText1}>November 2024</Text>
         <Text style={styles.subText}>Current Balance</Text>
-        <Text style={styles.balanceText}>GHS1,000.00</Text>
+        <Text style={styles.balanceText}>GHS {Balance}</Text>
       </View>
 
       <View
@@ -44,7 +74,7 @@ export default function HomeScreen({ navigation }) {
             <Ionicons name="arrow-up" size={24} color="white" />
           </View>
           <Text style={{ marginTop: 8, marginBottom: 6 }}>Income</Text>
-          <Text style={styles.incomeText}>GHS 8,000.00</Text>
+          <Text style={styles.incomeText}>GHS {totalIncome}</Text>
         </View>
 
         <View style={styles.incomeContainer}>
@@ -52,7 +82,7 @@ export default function HomeScreen({ navigation }) {
             <Ionicons name="arrow-down" size={24} color="white" />
           </View>
           <Text style={{ marginTop: 8, marginBottom: 6 }}>Expense</Text>
-          <Text style={styles.incomeText}>GHS 7,000.00</Text>
+          <Text style={styles.incomeText}>GHS {totalExpenses}</Text>
         </View>
       </View>
 
@@ -98,8 +128,7 @@ export default function HomeScreen({ navigation }) {
                   flexDirection: "column",
                   height: "100%",
                   width: "10",
-                  backgroundColor:
-                    radio_props[value].value === 0 ? "red" : "green",
+                  backgroundColor: item.type === "expense" ? "red" : "green",
                 }}
               ></View>
             </View>

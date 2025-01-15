@@ -51,18 +51,10 @@ const Add_Transaction = ({ navigation }) => {
         onPress={(value) => setValue(value)}
       />
 
-      <Text style={styles.txtTransaction}>Overall Income</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="eg. GHS100.00"
-        placeholderTextColor="gray"
-        value={Income}
-        onChangeText={setIncome}
-      />
       <TouchableOpacity
         style={styles.updateButton}
         onPress={() => {
-          console.log(radio_props[value].label);
+          //console.log(radio_props[value].label);
           addTransaction();
           setInput(" ");
           setExpense(" ");
