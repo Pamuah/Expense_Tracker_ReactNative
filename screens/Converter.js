@@ -5,6 +5,11 @@ import axios from "axios";
 import Freecurrencyapi from "@everapi/freecurrencyapi-js";
 
 export default function Currency_Converter() {
+  const getConverter = async () => {
+    try {
+      axios.get("fca_live_mDEH7RD3p9DwSBBpKw16V6tpnoTjjLnW2cVjYYSc");
+    } catch (error) {}
+  };
   return (
     <View style={styles.container}>
       <Image
