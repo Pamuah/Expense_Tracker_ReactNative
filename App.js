@@ -3,40 +3,46 @@ import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
+
 import HomeScreen from "./screens/Home";
 import Add_Transaction from "./screens/Add_Transaction";
 import Currency_Converter from "./screens/Converter";
+import Login from "./screens/Login";
+import SignUpScreen from "./screens/Sign_up";
 import { InputProvider } from "./Context/InputContext";
 import { HistoryProvider } from "./Context/HistoryContext";
-import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
-// Drawer Navigator for the Home screen
-const HomeDrawer = () => (
-  <Drawer.Navigator initialRouteName="Home">
-    <Drawer.Screen
-      name="Home"
-      component={HomeScreen}
-      options={{
-        drawerIcon: ({ color, size }) => (
-          <Ionicons name="home-outline" size={size} color={color} />
-        ),
-      }}
-    />
+// 🔁 Bottom Tab Navigator
+const BottomTabs = () => (
+  <Tab.Navigator
+    screenOptions={({ route }) => ({
+      headerShown: false,
+      tabBarIcon: ({ color, size }) => {
+        let iconName;
 
-    <Drawer.Screen
-      name="Currency Converter"
-      component={Currency_Converter}
-      options={{
-        drawerIcon: ({ color, size }) => (
-          <Ionicons name="logo-usd" size={size} color={color} />
-        ),
-      }}
-    />
-  </Drawer.Navigator>
+        if (route.name === "Home") {
+          iconName = "home-outline";
+        } else if (route.name === "Add Transaction") {
+          iconName = "add-circle-outline";
+        } else if (route.name === "Converter") {
+          iconName = "logo-usd";
+        }
+
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: "#007bff",
+      tabBarInactiveTintColor: "gray",
+    })}
+  >
+    <Tab.Screen name="Home" component={HomeScreen} />
+    <Tab.Screen name="Add Transaction" component={Add_Transaction} />
+    <Tab.Screen name="Converter" component={Currency_Converter} />
+  </Tab.Navigator>
 );
 
 const App = () => {
@@ -45,19 +51,25 @@ const App = () => {
       <InputProvider>
         <HistoryProvider>
           <NavigationContainer>
-            <Stack.Navigator>
-              {/* Use the drawer only for the Home screen */}
+            <Stack.Navigator initialRouteName="Sign_up">
               <Stack.Screen
-                name="HomeDrawer"
-                component={HomeDrawer}
+                name="Login"
+                component={Login}
                 options={{ headerShown: false }}
               />
-              {/* Other screens in the stack */}
               <Stack.Screen
-                name="Add_Transaction"
-                component={Add_Transaction}
-                options={{ headerShown: true, headerBackTitle: "Back" }}
+                name="Sign_up"
+                component={SignUpScreen}
+                options={{ headerShown: false }}
               />
+
+              {/* 👇 Replaces drawer with tabs */}
+              <Stack.Screen
+                name="Home"
+                component={BottomTabs}
+                options={{ headerShown: false }}
+              />
+
               <Stack.Screen
                 name="Currency_Converter"
                 component={Currency_Converter}

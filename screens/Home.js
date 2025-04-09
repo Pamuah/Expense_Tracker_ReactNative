@@ -1,13 +1,15 @@
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  SafeAreaView,
+  Platform,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   FlatList,
 } from "react-native";
+import FloatingActionButton from "../Custom Widget/floatingButton";
 import { useInput } from "../Context/InputContext";
 import { useState, useContext } from "react";
 import { HistoryContext } from "../Context/HistoryContext";
@@ -54,7 +56,8 @@ export default function HomeScreen({ navigation }) {
   console.log("Balance:", Balance);
   //console.log(transactions);
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <StatusBar style="light" translucent backgroundColor="transparent" />
       <View style={styles.blueContainer}>
         <Text style={styles.headerText}>Hello, User</Text>
         <Text style={styles.subText1}>November 2024</Text>
@@ -136,32 +139,20 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
 
-      <View
-        style={{ padding: 16, position: "absolute", bottom: 0, width: "100%" }}
-      >
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => {
-            navigation.navigate("Add_Transaction");
-          }}
-        >
-          <View style={styles.addIconCont}>
-            <Ionicons name="add" size={24} color="#0F52BA" />
-          </View>
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            Add Transaction
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <FloatingActionButton
+        onPress={() => navigation.navigate("Add_Transaction")}
+      />
 
       <StatusBar style="auto" />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    edges: "top",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#dcdcdc",
     alignItems: "start",
     justifyContent: "left",
